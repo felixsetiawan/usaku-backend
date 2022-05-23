@@ -23,7 +23,7 @@ export class TransactionEntity extends BaseEntity implements Transaction {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column({ type: 'datetime' })
+  @Column()
   @IsNotEmpty()
   datetime: Date;
 
