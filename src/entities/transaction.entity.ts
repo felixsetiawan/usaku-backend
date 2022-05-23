@@ -1,20 +1,19 @@
 import { IsNotEmpty } from 'class-validator';
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { User } from '@interfaces/users.interface';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Transaction } from '@interfaces/transaction.interface';
 
 @Entity()
-export class TransactionEntity extends BaseEntity implements User {
+export class TransactionEntity extends BaseEntity implements Transaction {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   @IsNotEmpty()
-  @Unique(['email'])
-  email: string;
+  uid: string;
 
   @Column()
   @IsNotEmpty()
-  password: string;
+  amount: number;
 
   @Column()
   @CreateDateColumn()
@@ -23,4 +22,11 @@ export class TransactionEntity extends BaseEntity implements User {
   @Column()
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column({ type: 'datetime' })
+  @IsNotEmpty()
+  datetime: Date;
+
+  @Column()
+  proof: string;
 }

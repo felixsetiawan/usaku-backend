@@ -9,12 +9,28 @@ export class UserEntity extends BaseEntity implements User {
 
   @Column()
   @IsNotEmpty()
+  uid: string;
+
+  @Column()
+  @IsNotEmpty()
   @Unique(['email'])
   email: string;
 
   @Column()
   @IsNotEmpty()
-  password: string;
+  name: string;
+
+  @Column()
+  @IsNotEmpty()
+  phoneNumber: string;
+
+  @Column()
+  @IsNotEmpty()
+  address: string;
+
+  @Column()
+  @IsNotEmpty()
+  isVerified: boolean;
 
   @Column()
   @CreateDateColumn()
@@ -23,4 +39,7 @@ export class UserEntity extends BaseEntity implements User {
   @Column()
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Column()
+  IDCard: string;
 }
