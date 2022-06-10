@@ -10,7 +10,10 @@ export const dbConnection: ConnectionOptions = {
   password: DB_PASSWORD,
   database: DB_DATABASE,
   synchronize: true,
-  logging: false,
+  logging: true,
+  ssl: {
+    rejectUnauthorized: false,
+  },
   entities: [join(__dirname, '../**/*.entity{.ts,.js}')],
   migrations: [join(__dirname, '../**/*.migration{.ts,.js}')],
   subscribers: [join(__dirname, '../**/*.subscriber{.ts,.js}')],
