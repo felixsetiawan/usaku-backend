@@ -11,8 +11,7 @@ export enum TransactionCategory {
   PIUTANG_USAHA = 'piutang usaha',
   INVESTASI = 'investasi',
   BEBAN_GAJI = 'gaji',
-  PENDAPATAN_USAHA = 'pendapatan usaha',
-  PENDAPATAN_LAINNYA = 'pendapatan lainnya',
+  PENJUALAN = 'penjualan',
   LAINNYA = 'lainnya',
 }
 
