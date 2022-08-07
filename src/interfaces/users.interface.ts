@@ -1,11 +1,10 @@
 export interface User {
-  id: number;
   uid: string;
-  email: string;
   name: string;
+  businessName: string;
   phoneNumber: string;
+  businessNumber: string;
   address: string;
-  isVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
   IDCard: string;
