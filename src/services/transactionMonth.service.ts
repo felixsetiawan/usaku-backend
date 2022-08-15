@@ -33,16 +33,6 @@ class TransactionMonthService extends Repository<TransactionMonthEntity> {
     const updateUser: User = await UserEntity.findOne({ where: { id: userId } });
     return updateUser;
   }
-
-  public async deleteUser(userId: number): Promise<User> {
-    if (isEmpty(userId)) throw new HttpException(400, "You're not userId");
-
-    const findUser: User = await UserEntity.findOne({ where: { id: userId } });
-    if (!findUser) throw new HttpException(409, "You're not user");
-
-    await UserEntity.delete({ id: userId });
-    return findUser;
-  }
 }
 
 export default TransactionMonthService;
