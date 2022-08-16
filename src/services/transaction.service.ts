@@ -1,16 +1,17 @@
-import { Between, EntityRepository, Repository } from 'typeorm';
+import { Between, EntityRepository, Repository, UpdateResult } from 'typeorm';
 import { createTransactionDto } from '@dtos/transactions.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { Transaction } from '@interfaces/transaction.interface';
 import { formatDate } from '@utils/util';
-import { TransactionEntity } from '@/entities/transaction.entity';
+import { TransactionCategory, TransactionEntity } from '@/entities/transaction.entity';
+import { isEmpty } from '@utils/util';
 
 @EntityRepository()
 class TransactionService extends Repository<TransactionEntity> {
-  public async createTransaction(transactionData: createTransactionDto, uid: string, id: number): Promise<Transaction[]> {
+  public async createTransaction(transactionData: createTransactionDto, uid: string): Promise<Transaction> {
     if (isEmpty(transactionData)) throw new HttpException(400, "You're not transactionData");
 
-    const updateTransaction: Transaction[] = await TransactionEntity.create({ ...transactionData, uid, id }).save();
+    const updateTransaction: Transaction = await TransactionEntity.create({ ...transactionData, uid }).save();
 
     return updateTransaction;
   }
@@ -18,14 +19,25 @@ class TransactionService extends Repository<TransactionEntity> {
   public async updateTransaction(transactionData: createTransactionDto, uid: string, id: number): Promise<Transaction> {
     if (isEmpty(transactionData)) throw new HttpException(400, "You're not transactionData");
 
-    const updateTransaction: Transaction[] = await TransactionEntity.update(transactionData, uid, id);
-
-    return updateTransaction;
+    const updateTransaction: UpdateResult = await TransactionEntity.update({ id, uid }, transactionData);
+    console.log(updateTransaction);
+    return null;
   }
 
   public async findAllTransaction(uid: string): Promise<Transaction[]> {
     const transactions: Transaction[] = await TransactionEntity.find();
     return transactions;
+  }
+
+  public async findCurrentTransaction(day: number, uid: string): Promise<Transaction[]> {
+    const findTransactions: Transaction[] = await TransactionEntity.createQueryBuilder('transaction')
+      .where(`transaction.uid = '${uid}' AND DATE_PART('day',transaction.datetime) = ${day}`)
+      .getMany();
+
+    console.log(findTransactions);
+    if (!findTransactions) throw new HttpException(409, 'No transaction in today.');
+
+    return findTransactions;
   }
 
   public async findAllTransactionByUid(uid: string): Promise<Transaction[]> {

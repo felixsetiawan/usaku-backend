@@ -9,9 +9,8 @@ class TransactionController {
   public postTransactions = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const uid = req.uid;
-      const id = req.query.id;
       const transactionData: createTransactionDto = req.body;
-      const newTransaction: Transaction[] = await this.transactionService.createTransaction(transactionData, uid, id);
+      const newTransaction: Transaction = await this.transactionService.createTransaction(transactionData, uid);
 
       res.status(201).json({ data: newTransaction, message: 'transaction created' });
     } catch (error) {
@@ -22,9 +21,9 @@ class TransactionController {
   public updateTransactions = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const uid = req.uid;
-      const id = req.query.id;
+      const id = Number(req.query.id);
       const transactionData: createTransactionDto = req.body;
-      const updateTransaction: Transaction[] = await this.transactionService.updateTransaction(transactionData, uid, id);
+      const updateTransaction: Transaction = await this.transactionService.updateTransaction(transactionData, uid, id);
 
       res.status(201).json({ data: updateTransaction, message: 'transaction updated' });
     } catch (error) {
@@ -34,7 +33,8 @@ class TransactionController {
 
   public getTransactions = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
-      const findAllTransactions: Transaction[] = await this.transactionService.findAllTransaction();
+      const uid = req.uid;
+      const findAllTransactions: Transaction[] = await this.transactionService.findAllTransaction(uid);
 
       res.status(200).json({ data: findAllTransactions, message: 'findAll' });
     } catch (error) {
@@ -53,11 +53,23 @@ class TransactionController {
     }
   };
 
+  public getCurrentTransaction = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const uid = req.uid;
+      const day = Number(req.query.day);
+      const findAllTransactions: Transaction[] = await this.transactionService.findCurrentTransaction(day, uid);
+
+      res.status(200).json({ data: findAllTransactions, message: 'findAll by Uid and current month', day });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public getTransactionsByCategory = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const uid = req.uid;
       const category = req.query.category;
-      const findAllTransactions: Transaction[] = await this.transactionService.findAllTransactionByCategory(uid);
+      const findAllTransactions: Transaction[] = await this.transactionService.findAllTransactionByCategory(uid, category);
 
       res.status(200).json({ data: findAllTransactions, message: 'findAll by Category', category });
     } catch (error) {
@@ -146,7 +158,7 @@ class TransactionController {
     }
   };
 
-  public getChartData = async (req: Request<Request>, res: Response, next: NextFunction): Promise<void> => {
+  public getChartData = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const uid = req.uid;
       const chartType = req.query.chartType;

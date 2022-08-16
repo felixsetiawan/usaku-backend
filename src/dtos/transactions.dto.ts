@@ -9,6 +9,4 @@ export class createTransactionDto {
   public amount: number;
 
   public datetime: Date;
-
-  public proof: string;
 }

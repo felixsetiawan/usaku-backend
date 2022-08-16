@@ -13,10 +13,11 @@ class UserService extends Repository<UserEntity> {
     return users;
   }
 
-  public async findUserById(userId: string): Promise<User> {
-    if (isEmpty(userId)) throw new HttpException(400, "You're not userId");
+  public async findUserById(uid: string): Promise<User> {
+    if (isEmpty(uid)) throw new HttpException(400, "You're not user");
 
-    const findUser: User = await UserEntity.findOne({ where: { uid: userId } });
+    const findUser: User = await UserEntity.findOne({ where: { uid } });
+    if (!findUser) return await UserEntity.create({ uid }).save();
 
     return findUser;
   }
