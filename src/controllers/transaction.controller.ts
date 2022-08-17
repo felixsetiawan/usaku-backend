@@ -21,9 +21,8 @@ class TransactionController {
   public updateTransactions = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const uid = req.uid;
-      const id = Number(req.query.id);
       const transactionData: createTransactionDto = req.body;
-      const updateTransaction: Transaction = await this.transactionService.updateTransaction(transactionData, uid, id);
+      const updateTransaction: Transaction = await this.transactionService.updateTransaction(transactionData, uid);
 
       res.status(201).json({ data: updateTransaction, message: 'transaction updated' });
     } catch (error) {

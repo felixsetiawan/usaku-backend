@@ -16,10 +16,10 @@ class TransactionService extends Repository<TransactionEntity> {
     return updateTransaction;
   }
 
-  public async updateTransaction(transactionData: createTransactionDto, uid: string, id: number): Promise<Transaction> {
+  public async updateTransaction(transactionData: createTransactionDto, uid: string): Promise<Transaction> {
     if (isEmpty(transactionData)) throw new HttpException(400, "You're not transactionData");
 
-    const updateTransaction: UpdateResult = await TransactionEntity.update({ id, uid }, transactionData);
+    const updateTransaction: UpdateResult = await TransactionEntity.update({ id: transactionData.id, uid }, transactionData);
     console.log(updateTransaction);
     return null;
   }
