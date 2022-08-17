@@ -1,6 +1,7 @@
 import { IsNotEmpty } from 'class-validator';
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { TransactionYear } from '@interfaces/transactionYear.interface';
+import { TransactionCategory } from './transaction.entity';
 
 @Entity()
 export class TransactionYearEntity extends BaseEntity implements TransactionYear {
@@ -14,6 +15,13 @@ export class TransactionYearEntity extends BaseEntity implements TransactionYear
   @Column()
   @IsNotEmpty()
   amount: number;
+
+  @Column({
+    type: 'enum',
+    enum: TransactionCategory,
+    default: TransactionCategory.LAINNYA,
+  })
+  category: TransactionCategory;
 
   @Column()
   year: number;

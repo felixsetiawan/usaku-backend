@@ -15,8 +15,13 @@ POST {{ baseURL }}/users
 Content-Type: application/json
 
 {
-    "email": "example@email.com",
-	"password": "password"
+	"uid": "tommy@shelby.com",
+	"name": "thamuz shelby",
+	"businessName": "kokein",
+	"businessNumber": "02222222222222222",
+	"phoneNumber": "088888888888888888888",
+	"address": "jalan jalan ke pasar minggu",
+	"IDCard": "NIK ges yak"
 }
 
 ###
@@ -25,8 +30,13 @@ PUT {{ baseURL }}/users/1
 Content-Type: application/json
 
 {
-    "email": "example@email.com",
-	"password": "password"
+	"uid": "57aJHLzM0nW2oixwD90DEFWoeR33",
+	"name": "thamuz shelby",
+	"businessName": "kokein",
+	"businessNumber": "02222222222222222",
+	"phoneNumber": "088888888888888888888",
+	"address": "jalan jalan ke pasar minggu",
+	"IDCard": "NIK ges yak"
 }
 
 ###
