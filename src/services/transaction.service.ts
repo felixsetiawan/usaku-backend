@@ -34,8 +34,7 @@ class TransactionService extends Repository<TransactionEntity> {
       .where(`transaction.uid = '${uid}' AND DATE_PART('day',transaction.datetime) = ${day}`)
       .getMany();
 
-    console.log(findTransactions);
-    if (!findTransactions) throw new HttpException(409, 'No transaction in today.');
+    if (!findTransactions) throw new HttpException(409, 'No transaction today.');
 
     return findTransactions;
   }
@@ -52,11 +51,17 @@ class TransactionService extends Repository<TransactionEntity> {
   }
 
   public async findAllTransactionByCategory(uid: string, category: TransactionCategory): Promise<Transaction[]> {
-    const findTransactions: Transaction[] = await TransactionEntity.query(`
-    SELECT category
-    FROM   transaction_entity
-    WHERE transaction_entity.uid = '${uid}' AND category = ${category}
-    `);
+    // const findTransactions: Transaction[] = await TransactionEntity.query(`
+    // SELECT category
+    // FROM   transaction_entity
+    // WHERE transaction_entity.uid = '${uid}' AND category = ${category}
+    // `);
+    const findTransactions: Transaction[] = await TransactionEntity.find({
+      where: {
+        uid: uid,
+        category: category,
+      },
+    });
     console.log(findTransactions);
 
     if (!findTransactions) throw new HttpException(409, 'No transaction found within that range.');
@@ -196,6 +201,17 @@ class TransactionService extends Repository<TransactionEntity> {
     GROUP BY category;`);
     console.log(findTransactions);
     if (!findTransactions) throw new HttpException(409, 'No transaction found within that range.');
+
+    return findTransactions;
+  }
+
+  public async getPenjualanBersihFromMonthToMonth(start: Date, end: Date, uid: string): Promise<Transaction[]> {
+    const findTransactions: Transaction[] = await TransactionEntity.query(`SELECT sum(amount) as PENJUALAN_BERSIH
+    FROM   transaction_entity
+    WHERE transaction_entity.uid = '${uid}' AND (datetime BETWEEN '${formatDate(start)}' AND '${formatDate(
+      end,
+    )}') AND transaction_entity.category = 'Penjualan';`);
+    if (!findTransactions) throw new HttpException(409, 'No transaction found in that month.');
 
     return findTransactions;
   }
