@@ -1,5 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
-import { BaseEntity, Entity, Generated, PrimaryColumn, Column, Unique, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { BaseEntity, Entity, PrimaryColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { User } from '@interfaces/users.interface';
 
 @Entity()
@@ -11,6 +11,10 @@ export class UserEntity extends BaseEntity implements User {
   @Column()
   @IsNotEmpty()
   name: string;
+
+  @Column({ type: 'uuid' })
+  @IsNotEmpty()
+  organization_key: string;
 
   @Column({ nullable: true })
   business_name: string;
@@ -34,7 +38,4 @@ export class UserEntity extends BaseEntity implements User {
 
   @Column({ nullable: true })
   id_card_number: string;
-
-  @Column({ nullable: true })
-  organization_key: string;
 }

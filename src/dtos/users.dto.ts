@@ -16,4 +16,7 @@ export class CreateUserDto {
   public address: string;
 
   public IDCard: string;
+
+  @IsString()
+  public organization_key: string;
 }
