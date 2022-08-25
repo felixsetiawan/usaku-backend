@@ -13,25 +13,28 @@ export class UserEntity extends BaseEntity implements User {
   name: string;
 
   @Column({ nullable: true })
-  businessName: string;
+  business_name: string;
 
   @Column({ nullable: true })
-  phoneNumber: string;
+  phone_number: string;
 
   @Column({ nullable: true })
-  businessNumber: string;
+  business_number: string;
 
   @Column({ nullable: true })
   address: string;
 
   @Column()
   @CreateDateColumn()
-  createdAt: Date;
+  created_at: Date;
 
   @Column()
   @UpdateDateColumn()
-  updatedAt: Date;
+  updated_at: Date;
 
   @Column({ nullable: true })
-  IDCard: string;
+  id_card_number: string;
+
+  @Column({ nullable: true })
+  organization_key: string;
 }

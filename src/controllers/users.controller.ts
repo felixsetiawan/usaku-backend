@@ -5,6 +5,16 @@ import userService from '@services/users.service';
 class UsersController {
   public userService = new userService();
 
+  public login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const userId = req.uid;
+      const path: string = await this.userService.login(userId);
+      res.status(200).json({ path });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const findAllUsersData: User[] = await this.userService.findAllUser();
