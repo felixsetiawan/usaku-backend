@@ -19,7 +19,6 @@ export class TransactionMonthEntity extends BaseEntity implements TransactionMon
   @Column({
     type: 'enum',
     enum: TransactionCategory,
-    default: TransactionCategory.LAINNYA,
   })
   category: TransactionCategory;
 

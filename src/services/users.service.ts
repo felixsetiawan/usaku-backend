@@ -1,4 +1,3 @@
-import { hash } from 'bcrypt';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateUserDto } from '@dtos/users.dto';
 import { UserEntity } from '@entities/users.entity';
@@ -8,6 +7,16 @@ import { isEmpty } from '@utils/util';
 
 @EntityRepository()
 class UserService extends Repository<UserEntity> {
+  public async login(uid: string): Promise<string> {
+    console.log(uid);
+    const findUser: User = await UserEntity.findOne({ where: { uid } });
+    console.log(findUser);
+    if (findUser) {
+      return '/transaction';
+    }
+    return '/new-user';
+  }
+
   public async findAllUser(): Promise<User[]> {
     const users: User[] = await UserEntity.find();
     return users;

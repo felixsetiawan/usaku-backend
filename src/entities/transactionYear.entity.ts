@@ -19,7 +19,6 @@ export class TransactionYearEntity extends BaseEntity implements TransactionYear
   @Column({
     type: 'enum',
     enum: TransactionCategory,
-    default: TransactionCategory.LAINNYA,
   })
   category: TransactionCategory;
 
