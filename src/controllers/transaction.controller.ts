@@ -30,6 +30,18 @@ class TransactionController {
     }
   };
 
+  public deleteTransaction = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const uid = req.uid;
+      const id = req.id;
+      const deleteTransaction: Transaction = await this.transactionService.deleteTransaction(uid, id);
+
+      res.status(200).json({ data: deleteTransaction, message: 'transaction deleted' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public getTransactions = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const uid = req.uid;

@@ -24,6 +24,13 @@ class TransactionService extends Repository<TransactionEntity> {
     return null;
   }
 
+  public async deleteTransaction(uid: string, id: number): Promise<Number> {
+    const transactions: Transaction[] = await TransactionEntity.delete({ uid: uid, id: id });
+
+    if (!Transactions) throw new HttpException(409, 'No transaction found with that id.');
+    return transactions;
+  }
+
   public async findAllTransaction(uid: string): Promise<Transaction[]> {
     const transactions: Transaction[] = await TransactionEntity.find();
     return transactions;
@@ -205,15 +212,125 @@ class TransactionService extends Repository<TransactionEntity> {
     return findTransactions;
   }
 
-  public async getPenjualanBersihFromMonthToMonth(start: Date, end: Date, uid: string): Promise<Transaction[]> {
-    const findTransactions: Transaction[] = await TransactionEntity.query(`SELECT sum(amount) as PENJUALAN_BERSIH
+  public async getPenjualanBersih(start: Date, end: Date, uid: string): Promise<Number> {
+    const penjualanBersih: Number = await TransactionEntity.query(`SELECT sum(amount) as PENJUALAN_BERSIH
     FROM   transaction_entity
+    WHERE uid = '${uid}' AND (datetime BETWEEN '${formatDate(start)}' AND '${formatDate(
+      end,
+    )}') AND category IN ('Penjualan','Retur Penjualan','Potongan Harga Penjualan') AND completion = 'Lunas';`);
+    if (!penjualanBersih) throw new HttpException(409, 'No value');
+
+    return penjualanBersih;
+  }
+
+  public async getHPP(start: Date, end: Date, uid: string): Promise<Number> {
+    const HPPValue: Number = await TransactionEntity.query(`SELECT sum(- amount) as HPP
+    from transaction_entity
     WHERE transaction_entity.uid = '${uid}' AND (datetime BETWEEN '${formatDate(start)}' AND '${formatDate(
       end,
-    )}') AND transaction_entity.category = 'Penjualan';`);
-    if (!findTransactions) throw new HttpException(409, 'No transaction found in that month.');
+    )}') AND completion = 'Lunas' AND category IN ('Beban Angkut Pembelian', 'Gaji Karyawan Produksi', 'Pembelian Bahan Baku','Potongan Pembelian Barang atau Jasa', 'Retur Pembelian Barang atau Jasa');`);
+    if (!HPPValue) throw new HttpException(409, 'No value');
 
-    return findTransactions;
+    return HPPValue;
+  }
+
+  public async getBiayaPenjualanUmumAdmOperasional(start: Date, end: Date, uid: string): Promise<Number> {
+    const biaya: Number = await TransactionEntity.query(`SELECT - sum(amount) as biaya
+    from transaction_entity
+    WHERE transaction_entity.uid = '${uid}' AND (datetime BETWEEN '${formatDate(start)}' AND '${formatDate(
+      end,
+    )}') AND completion = 'Lunas' AND category IN ('Biaya Pengiriman Barang','Biaya Pemeliharaan Sistem', 'Biaya Pemasaran', 'Biaya Pemeliharaan Situs Web','Biaya Utilitas dan Peralatan Kantor','Biaya Pemeliharaan Sistem','Biaya Listrik','Biaya Gas','Biaya Air','Biaya Telepon');
+    `);
+    if (!biaya) throw new HttpException(409, 'No value');
+    return biaya;
+  }
+
+  public async getBiayaKontrak(start: Date, end: Date, uid: string): Promise<Number> {
+    const biaya: Number = await TransactionEntity.query(`SELECT - sum(amount) as biaya
+    from transaction_entity
+    WHERE transaction_entity.uid = '${uid}' AND (datetime BETWEEN '${formatDate(start)}' AND '${formatDate(
+      end,
+    )}') AND completion = 'Lunas' AND category = 'Biaya Sewa';
+    `);
+    if (!biaya) throw new HttpException(409, 'No value');
+    return biaya;
+  }
+
+  public async getBiayaLainnya(start: Date, end: Date, uid: string): Promise<Number> {
+    const biaya: Number = await TransactionEntity.query(`SELECT - sum(amount) as biaya
+    from transaction_entity
+    WHERE transaction_entity.uid = '${uid}' AND (datetime BETWEEN '${formatDate(start)}' AND '${formatDate(
+      end,
+    )}') AND completion = 'Lunas' AND category = 'Pengeluaran Lainnya';
+    `);
+    if (!biaya) throw new HttpException(409, 'No value');
+    return biaya;
+  }
+
+  public async getPendapatanLainnya(start: Date, end: Date, uid: string): Promise<Number> {
+    const pendapatan: Number = await TransactionEntity.query(`SELECT sum(amount) as pendapatan
+      from transaction_entity
+      WHERE transaction_entity.uid = '${uid}' AND (datetime BETWEEN '${formatDate(start)}' AND '${formatDate(
+      end,
+    )}') AND completion = 'Lunas' AND category = 'Pendapatan Lainnya';
+      `);
+    if (!pendapatan) throw new HttpException(409, 'No value');
+    return pendapatan;
+  }
+
+  public async getPiutang(start: Date, end: Date, uid: string): Promise<Number> {
+    const piutang: Number = await TransactionEntity.query(`SELECT sum(amount) as piutang
+      from transaction_entity
+      WHERE transaction_entity.uid = '${uid}' AND (datetime BETWEEN '${formatDate(start)}' AND '${formatDate(
+      end,
+    )}') AND completion = 'Belum Lunas' AND amount > 0;
+      `);
+    if (!piutang) throw new HttpException(409, 'No value');
+    return piutang;
+  }
+
+  public async getHutang(start: Date, end: Date, uid: string): Promise<Number> {
+    const hutang: Number = await TransactionEntity.query(`SELECT - sum(amount) as hutang
+      from transaction_entity
+      WHERE transaction_entity.uid = '${uid}' AND (datetime BETWEEN '${formatDate(start)}' AND '${formatDate(
+      end,
+    )}') AND completion = 'Belum Lunas' AND amount < 0;
+      `);
+    if (!hutang) throw new HttpException(409, 'No value');
+    return hutang;
+  }
+
+  public async getModal(start: Date, end: Date, uid: string): Promise<Number> {
+    const modal: Number = await TransactionEntity.query(`SELECT sum(amount) as modal
+      from transaction_entity
+      WHERE transaction_entity.uid = '${uid}' AND (datetime BETWEEN '${formatDate(start)}' AND '${formatDate(
+      end,
+    )}') AND completion = 'Lunas' AND category = 'Penambahan Modal';
+      `);
+    if (!modal) throw new HttpException(409, 'No value');
+    return modal;
+  }
+
+  public async getLabaDitahan(start: Date, end: Date, uid: string): Promise<Number> {
+    const labaDitahan: Number = await TransactionEntity.query(`SELECT - sum(amount) as laba_ditahan
+      from transaction_entity
+      WHERE transaction_entity.uid = '${uid}' AND (datetime BETWEEN '${formatDate(start)}' AND '${formatDate(
+      end,
+    )}') AND completion = 'Lunas' AND category = 'Laba Ditahan';
+      `);
+    if (!labaDitahan) throw new HttpException(409, 'No value');
+    return labaDitahan;
+  }
+
+  public async getPrive(start: Date, end: Date, uid: string): Promise<Number> {
+    const prive: Number = await TransactionEntity.query(`SELECT - sum(amount) as prive
+      from transaction_entity
+      WHERE transaction_entity.uid = '${uid}' AND (datetime BETWEEN '${formatDate(start)}' AND '${formatDate(
+      end,
+    )}') AND completion = 'Lunas' AND category = 'Pribadi / Prive';
+      `);
+    if (!prive) throw new HttpException(409, 'No value');
+    return prive;
   }
 }
 

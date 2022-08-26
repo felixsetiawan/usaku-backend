@@ -20,13 +20,19 @@ export class UserEntity extends BaseEntity implements User {
   business_name: string;
 
   @Column({ nullable: true })
-  phone_number: string;
+  id_card: string;
 
   @Column({ nullable: true })
-  business_number: string;
+  business_permit: string;
 
   @Column({ nullable: true })
-  address: string;
+  family_register: string;
+
+  @Column({ nullable: true })
+  collateral_doc: string;
+
+  @Column({ nullable: true })
+  tax_number_card: string;
 
   @Column()
   @CreateDateColumn()
@@ -35,7 +41,4 @@ export class UserEntity extends BaseEntity implements User {
   @Column()
   @UpdateDateColumn()
   updated_at: Date;
-
-  @Column({ nullable: true })
-  id_card_number: string;
 }

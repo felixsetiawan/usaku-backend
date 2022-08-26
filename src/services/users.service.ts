@@ -8,9 +8,7 @@ import { isEmpty } from '@utils/util';
 @EntityRepository()
 class UserService extends Repository<UserEntity> {
   public async login(uid: string): Promise<string> {
-    console.log(uid);
     const findUser: User = await UserEntity.findOne({ where: { uid } });
-    console.log(findUser);
     if (findUser) {
       return '/transaction';
     }
