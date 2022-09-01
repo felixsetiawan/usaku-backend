@@ -46,6 +46,10 @@ export class TransactionEntity extends BaseEntity implements Transaction {
   @IsNotEmpty()
   uid: string;
 
+  @Column({ nullable: true })
+  @IsNotEmpty()
+  business_key: string;
+
   @Column()
   @IsNotEmpty()
   amount: number;

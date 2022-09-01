@@ -6,4 +6,5 @@ export interface Transaction {
   updatedAt: Date;
   datetime: Date;
   proof: string;
+  business_key: string;
 }

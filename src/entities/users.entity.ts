@@ -12,18 +12,20 @@ export class UserEntity extends BaseEntity implements User {
   @IsNotEmpty()
   name: string;
 
+  @Column()
+  @IsNotEmpty()
+  email: string;
+
+  @Column()
+  @IsNotEmpty()
+  role: string;
+
   @Column({ type: 'uuid' })
   @IsNotEmpty()
-  organization_key: string;
-
-  @Column({ nullable: true })
-  business_name: string;
+  business_key: string;
 
   @Column({ nullable: true })
   id_card: string;
-
-  @Column({ nullable: true })
-  business_permit: string;
 
   @Column({ nullable: true })
   family_register: string;
