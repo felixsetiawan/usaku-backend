@@ -113,6 +113,7 @@ class TransactionService extends Repository<TransactionEntity> {
       )}' AND completion = 'Lunas' )
     GROUP  BY month, year
     ORDER BY month, year;`);
+
     if (!findTransactions) throw new HttpException(409, 'No transaction found within that range.');
 
     return findTransactions;

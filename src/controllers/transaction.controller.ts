@@ -119,13 +119,17 @@ class TransactionController {
       const from = req.query.from;
       const to = req.query.to;
       const nettIncomeData = await this.transactionService.getNettIncome(from, to, business_key);
-      if (nettIncomeData) {
+      if (nettIncomeData && nettIncomeData.length > 0) {
         res.status(200).json({ data: nettIncomeData, message: `nettIncome data.` });
       } else {
         res.status(204).json({ message: `Empty Data` });
       }
     } catch (error) {
-      next(error);
+      if (error.routine === 'DateTimeParseError') {
+        res.status(400).json({ message: 'Invalid param' });
+      } else {
+        next(error);
+      }
     }
   };
 
@@ -135,13 +139,17 @@ class TransactionController {
       const from = req.query.from;
       const to = req.query.to;
       const saleData = await this.transactionService.getSaleData(from, to, business_key);
-      if (saleData) {
+      if (saleData && saleData.length > 0) {
         res.status(200).json({ data: saleData, message: `sale data.` });
       } else {
         res.status(204).json({ message: `Empty Data` });
       }
     } catch (error) {
-      next(error);
+      if (error.routine === 'DateTimeParseError') {
+        res.status(400).json({ message: 'Invalid param' });
+      } else {
+        next(error);
+      }
     }
   };
 
@@ -152,13 +160,17 @@ class TransactionController {
       const from = req.query.from;
       const to = req.query.to;
       const contributionPercentageData = await this.transactionService.getContributionData(from, to, contributionType, business_key);
-      if (contributionPercentageData) {
+      if (contributionPercentageData && contributionPercentageData.length > 0) {
         res.status(200).json({ data: contributionPercentageData, message: `${contributionType} contribution data.` });
       } else {
         res.status(204).json({ message: `Empty Data` });
       }
     } catch (error) {
-      next(error);
+      if (error.routine === 'DateTimeParseError') {
+        res.status(400).json({ message: 'Invalid param' });
+      } else {
+        next(error);
+      }
     }
   };
 
@@ -168,13 +180,17 @@ class TransactionController {
       const from = req.query.from;
       const to = req.query.to;
       const penjualanPiutangData = await this.transactionService.getPenjualanPiutangData(from, to, business_key);
-      if (penjualanPiutangData) {
+      if (penjualanPiutangData && penjualanPiutangData.length > 0) {
         res.status(200).json({ data: penjualanPiutangData[0], message: `penjualan and piutang data.` });
       } else {
         res.status(204).json({ message: `Empty Data` });
       }
     } catch (error) {
-      next(error);
+      if (error.routine === 'DateTimeParseError') {
+        res.status(400).json({ message: 'Invalid param' });
+      } else {
+        next(error);
+      }
     }
   };
 
@@ -215,7 +231,11 @@ class TransactionController {
       // res.status(204).json({ message: `Empty Data` });
       // }
     } catch (error) {
-      next(error);
+      if (error.routine === 'DateTimeParseError') {
+        res.status(400).json({ message: 'Invalid param' });
+      } else {
+        next(error);
+      }
     }
   };
 }

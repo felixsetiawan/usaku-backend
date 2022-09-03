@@ -15,7 +15,7 @@ class TransactionRoute implements Routes {
   private initializeRoutes() {
     this.router.post(`${this.path}`, authMiddleware, this.transactionController.postTransactions);
     this.router.patch(`${this.path}`, authMiddleware, this.transactionController.updateTransactions);
-    this.router.get(`${this.path}`, authMiddleware, this.transactionController.getMonthlyTransaction);
+    this.router.get(`${this.path}`, authMiddleware, this.transactionController.getTransactionsByUid);
     this.router.delete(`${this.path}/delete`, authMiddleware, this.transactionController.deleteTransaction);
     this.router.get(`${this.path}/category`, authMiddleware, this.transactionController.getTransactionsByCategory);
     this.router.get(`${this.path}/credits`, authMiddleware, this.transactionController.getIncompleteTransactions);
