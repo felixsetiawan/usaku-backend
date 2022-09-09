@@ -16,14 +16,14 @@ class TransactionRoute implements Routes {
     this.router.post(`${this.path}`, authMiddleware, this.transactionController.postTransactions);
     this.router.patch(`${this.path}`, authMiddleware, this.transactionController.updateTransactions);
     this.router.get(`${this.path}`, authMiddleware, this.transactionController.getTransactionsByUid);
-    this.router.get(`${this.path}/ranged`, authMiddleware, this.transactionController.getTransactionInRange);
-    this.router.get(`${this.path}/nettIncome`, authMiddleware, this.transactionController.getNettIncome);
+    this.router.delete(`${this.path}/delete`, authMiddleware, this.transactionController.deleteTransaction);
+    this.router.get(`${this.path}/category`, authMiddleware, this.transactionController.getTransactionsByCategory);
+    this.router.get(`${this.path}/credits`, authMiddleware, this.transactionController.getIncompleteTransactions);
+    this.router.get(`${this.path}/nettIncomeData`, authMiddleware, this.transactionController.getNettIncomeData);
     this.router.get(`${this.path}/saleData`, authMiddleware, this.transactionController.getSaleData);
+    this.router.get(`${this.path}/penjualanPiutangData`, authMiddleware, this.transactionController.getPenjualanPiutangData);
     this.router.get(`${this.path}/contributionData`, authMiddleware, this.transactionController.getContributionData);
-    this.router.get(`${this.path}/monthly`, authMiddleware, this.transactionController.getMonthlyTransaction);
-    this.router.get(`${this.path}/yearly`, authMiddleware, this.transactionController.getYearlyTransaction);
-    this.router.get(`${this.path}/summary`, authMiddleware, this.transactionController.getSummary);
-    this.router.get(`${this.path}/visualizationData`, authMiddleware, this.transactionController.getChartData);
+    this.router.get(`${this.path}/summaryData`, authMiddleware, this.transactionController.getSummaryData);
   }
 }
 

@@ -10,7 +10,7 @@ export const dbConnection: ConnectionOptions = {
   password: DB_PASSWORD,
   database: DB_DATABASE,
   synchronize: true,
-  logging: true,
+  logging: false,
   ssl: {
     rejectUnauthorized: false,
   },

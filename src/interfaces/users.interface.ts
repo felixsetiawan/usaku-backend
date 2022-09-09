@@ -1,12 +1,11 @@
 export interface User {
   uid: string;
   name: string;
-  business_name: string;
-  phone_number: string;
-  business_number: string;
-  address: string;
+  email: string;
+  id_card: string;
+  family_register: string;
+  collateral_doc: string;
+  tax_number_card: string;
   created_at: Date;
   updated_at: Date;
-  id_card_number: string;
-  organization_key: string;
 }

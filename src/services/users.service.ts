@@ -8,9 +8,7 @@ import { isEmpty } from '@utils/util';
 @EntityRepository()
 class UserService extends Repository<UserEntity> {
   public async login(uid: string): Promise<string> {
-    console.log(uid);
     const findUser: User = await UserEntity.findOne({ where: { uid } });
-    console.log(findUser);
     if (findUser) {
       return '/transaction';
     }
@@ -49,6 +47,17 @@ class UserService extends Repository<UserEntity> {
     await UserEntity.update(userId, userData);
 
     const updateUser: User = await UserEntity.findOne({ where: { uid: userId } });
+    return updateUser;
+  }
+  public async editMember(userId: string, userData: CreateUserDto): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
+
+    const findUser: User = await UserEntity.findOne({ where: { uid: userData.uid } });
+    if (!findUser) await this.createUser(userData, userId);
+
+    await UserEntity.update(userData.uid, userData);
+
+    const updateUser: User = await UserEntity.findOne({ where: { uid: userData.uid } });
     return updateUser;
   }
 }
