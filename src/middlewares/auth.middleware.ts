@@ -11,12 +11,10 @@ import { Employee } from '@/interfaces/employee.interface';
 
 const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
-    const Authorization = req.cookies['Authorization'] || (req.header('Authorization') || req.header('_007') ? req.header('_007') : null);
-    const uid = req.header('_770');
+    const Authorization = req.cookies['Authorization'] || (req.header('Authorization') || req.header('007') ? req.header('007') : null);
+    const uid = req.header('770');
 
-    console.log('headers', req.header);
-
-    const business_key = req.header('_012');
+    const business_key = req.header('012');
 
     if (Authorization && uid) {
       try {
@@ -43,8 +41,6 @@ const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFun
         }
       }
     } else {
-      console.log('header 007', Authorization);
-      console.log('header 770', uid);
       next(new HttpException(404, 'Authentication token missing'));
     }
   } catch (error) {
