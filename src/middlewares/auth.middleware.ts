@@ -41,6 +41,8 @@ const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFun
         }
       }
     } else {
+      console.log('header 007', Authorization);
+      console.log('header 770', uid);
       next(new HttpException(404, 'Authentication token missing'));
     }
   } catch (error) {
