@@ -198,18 +198,42 @@ class TransactionController {
       const business_key = req.business_key;
       const from = req.query.from;
       const to = req.query.to;
-      const hpp = (await this.transactionService.getHPP(from, to, business_key)).hpp || 0;
-      const biayaKontrak = (await this.transactionService.getBiayaKontrak(from, to, business_key)).biaya_kontrak || 0;
-      const biayaLainnya = (await this.transactionService.getBiayaLainnya(from, to, business_key)).biaya_lainnya || 0;
-      const biayaOperasional =
-        (await this.transactionService.getBiayaPenjualanUmumAdmOperasional(from, to, business_key)).biaya_penjualan_umum_adm_operasional || 0;
-      const piutang = (await this.transactionService.getPiutang(from, to, business_key)).piutang || 0;
-      const hutang = (await this.transactionService.getHutang(from, to, business_key)).hutang || 0;
-      const labaDitahan = (await this.transactionService.getLabaDitahan(from, to, business_key)).laba_ditahan || 0;
-      const modal = (await this.transactionService.getModal(from, to, business_key)).modal || 0;
-      const penjualanBersih = (await this.transactionService.getPenjualanBersih(from, to, business_key)).penjualan_bersih || 0;
-      const pendapatanLainnya = (await this.transactionService.getPendapatanLainnya(from, to, business_key)).pendapatan_lainnya || 0;
-      const prive = (await this.transactionService.getPrive(from, to, business_key)).prive || 0;
+      const [
+        hppResponse,
+        biayaKontrakResponse,
+        biayaLainnyaResponse,
+        biayaOperasionalResponse,
+        piutangResponse,
+        hutangResponse,
+        labaDitahanResponse,
+        modalResponse,
+        penjualanBersihResponse,
+        pendapatanLainnyaResponse,
+        priveResponse,
+      ] = await Promise.all([
+        this.transactionService.getHPP(from, to, business_key),
+        this.transactionService.getBiayaKontrak(from, to, business_key),
+        this.transactionService.getBiayaLainnya(from, to, business_key),
+        this.transactionService.getBiayaPenjualanUmumAdmOperasional(from, to, business_key),
+        this.transactionService.getPiutang(from, to, business_key),
+        this.transactionService.getHutang(from, to, business_key),
+        this.transactionService.getLabaDitahan(from, to, business_key),
+        this.transactionService.getModal(from, to, business_key),
+        this.transactionService.getPenjualanBersih(from, to, business_key),
+        this.transactionService.getPendapatanLainnya(from, to, business_key),
+        this.transactionService.getPrive(from, to, business_key),
+      ]);
+      const hpp = hppResponse.hpp || 0;
+      const biayaKontrak = biayaKontrakResponse.biaya_kontrak || 0;
+      const biayaLainnya = biayaLainnyaResponse.biaya_lainnya || 0;
+      const biayaOperasional = biayaOperasionalResponse.biaya_penjualan_umum_adm_operasional || 0;
+      const piutang = piutangResponse.piutang || 0;
+      const hutang = hutangResponse.hutang || 0;
+      const labaDitahan = labaDitahanResponse.laba_ditahan || 0;
+      const modal = modalResponse.modal || 0;
+      const penjualanBersih = penjualanBersihResponse.penjualan_bersih || 0;
+      const pendapatanLainnya = pendapatanLainnyaResponse.pendapatan_lainnya || 0;
+      const prive = priveResponse.prive || 0;
       const summaryObj = {
         hpp,
         biayaKontrak,
