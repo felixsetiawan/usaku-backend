@@ -3,4 +3,6 @@ export interface Employee {
   business_key: string;
   role: string;
   business_name: string;
+  name: string;
+  email: string;
 }

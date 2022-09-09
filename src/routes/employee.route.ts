@@ -14,9 +14,10 @@ class BusinessRoute implements Routes {
   }
 
   private initializeRoutes() {
-    this.router.get(`${this.path}/members`, newUserMiddleware, this.employeeController.findAllMembers);
+    this.router.get(`${this.path}/members`, authMiddleware, this.employeeController.findAllMembers);
     this.router.get(`${this.path}/business`, newUserMiddleware, this.employeeController.findAllBusiness);
     this.router.post(this.path, newUserMiddleware, this.employeeController.newEmployee);
+    this.router.get(this.path, authMiddleware, this.employeeController.findRole);
   }
 }
 

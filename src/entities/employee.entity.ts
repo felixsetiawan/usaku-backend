@@ -21,6 +21,14 @@ export class EmployeeEntity extends BaseEntity implements Employee {
   business_name: string;
 
   @Column()
+  @IsNotEmpty()
+  name: string;
+
+  @Column()
+  @IsNotEmpty()
+  email: string;
+
+  @Column()
   @CreateDateColumn()
   created_at: Date;
 

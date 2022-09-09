@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Not, Repository } from 'typeorm';
 import { EmployeeEntity } from '@entities/employee.entity';
 import { HttpException } from '@exceptions/HttpException';
 import { Business } from '@/interfaces/business.interface';
@@ -8,10 +8,12 @@ import { BusinessEntity } from '@/entities/business.entity';
 
 @EntityRepository()
 class EmployeeService extends Repository<EmployeeEntity> {
-  public async findAllEmployee(businessKey: string): Promise<Employee[]> {
+  public async findAllEmployee(uid: string, businessKey: string): Promise<Employee[]> {
     const employee: Employee[] = await EmployeeEntity.find({
       where: {
+        uid: Not(uid),
         business_key: businessKey,
+        role: Not('owner'),
       },
     });
 
@@ -39,6 +41,18 @@ class EmployeeService extends Repository<EmployeeEntity> {
       throw new HttpException(400, 'Business Key does not exist.');
     }
     const employee: Employee = await EmployeeEntity.create({ ...employeeData, business_name: isBusinessExist.business_name, uid }).save();
+    return employee;
+  }
+
+  public async findRole(uid: string, businessKey: string): Promise<Employee> {
+    console.log(uid, businessKey);
+    const employee: Employee = await EmployeeEntity.createQueryBuilder('employee')
+      .select(['employee.role'])
+      .where('employee.uid = :uid and employee.business_key= :businessKey', { uid, businessKey })
+      .getOne();
+    if (!employee) {
+      throw new HttpException(400, 'Employee does not exist');
+    }
     return employee;
   }
 }
