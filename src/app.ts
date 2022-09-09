@@ -63,9 +63,7 @@ class App {
 
   private initializeMiddlewares() {
     this.app.use(morgan(LOG_FORMAT, { stream }));
-    this.app.use(
-      cors({ origin: ORIGIN, credentials: CREDENTIALS, allowedHeaders: ['_007', '_770', '_012'], exposedHeaders: ['_007', '_770', '_012'] }),
-    );
+    this.app.use(cors({ origin: ORIGIN, credentials: CREDENTIALS, allowedHeaders: ['007', '770', '012'], exposedHeaders: ['007', '770', '012'] }));
     this.app.use(hpp());
     this.app.use(helmet());
     this.app.use(compression());
