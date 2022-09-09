@@ -4,21 +4,25 @@ import { RequestWithUser } from '@interfaces/auth.interface';
 import { verifyToken } from '@utils/util';
 import { BusinessEntity } from '@/entities/business.entity';
 import { UserEntity } from '@/entities/users.entity';
+import { EmployeeEntity } from '@/entities/employee.entity';
 import { User } from '@interfaces/users.interface';
 import { Business } from '@/interfaces/business.interface';
+import { Employee } from '@/interfaces/employee.interface';
 
 const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
     const Authorization = req.cookies['Authorization'] || (req.header('Authorization') || req.header('_007') ? req.header('_007') : null);
+    const uid = req.header('_770');
 
-    if (Authorization) {
+    const business_key = req.header('_012');
+
+    if (Authorization && uid) {
       try {
-        const uid = await verifyToken(Authorization);
-        if (uid) {
+        const decryptedToken = await verifyToken(Authorization);
+        if (uid === decryptedToken) {
           req.uid = uid;
-          const findUser: User = await UserEntity.findOne({ where: { uid } });
-          if (findUser) {
-            const findBusiness: Business = await BusinessEntity.findOne({ where: { business_key: findUser.business_key } });
+          if (business_key) {
+            const findBusiness: Business = await BusinessEntity.findOne({ where: { business_key: business_key } });
             if (findBusiness) {
               req.business_key = findBusiness.business_key;
               next();

@@ -23,7 +23,4 @@ export class CreateUserDto {
   public businessNumber: string;
 
   public IDCard: string;
-
-  @IsString()
-  public organization_key: string;
 }

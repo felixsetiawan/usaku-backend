@@ -57,7 +57,6 @@ class TransactionController {
     try {
       const uid = req.uid;
       const business_key = req.business_key;
-      console.log('BUSINESS KEY--------------------------', business_key);
       const findAllTransactions: Transaction[] = await this.transactionService.findAllTransactionByUid(business_key);
 
       res.status(200).json({ data: findAllTransactions, message: 'findAll by Uid' });
