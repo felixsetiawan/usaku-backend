@@ -14,6 +14,8 @@ const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFun
     const Authorization = req.cookies['Authorization'] || (req.header('Authorization') || req.header('_007') ? req.header('_007') : null);
     const uid = req.header('_770');
 
+    console.log('headers', req.header);
+
     const business_key = req.header('_012');
 
     if (Authorization && uid) {
