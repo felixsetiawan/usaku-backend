@@ -14,6 +14,16 @@ class UsersController {
       next(error);
     }
   };
+  public editMember = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const userId = req.uid;
+      const userData = req.body;
+      await this.userService.editMember(userId, userData);
+      res.status(200).json({ message: 'edited' });
+    } catch (error) {
+      next(error);
+    }
+  };
 
   public getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {

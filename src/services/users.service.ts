@@ -49,6 +49,17 @@ class UserService extends Repository<UserEntity> {
     const updateUser: User = await UserEntity.findOne({ where: { uid: userId } });
     return updateUser;
   }
+  public async editMember(userId: string, userData: CreateUserDto): Promise<User> {
+    if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
+
+    const findUser: User = await UserEntity.findOne({ where: { uid: userData.uid } });
+    if (!findUser) await this.createUser(userData, userId);
+
+    await UserEntity.update(userData.uid, userData);
+
+    const updateUser: User = await UserEntity.findOne({ where: { uid: userData.uid } });
+    return updateUser;
+  }
 }
 
 export default UserService;
