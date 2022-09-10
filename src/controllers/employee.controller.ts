@@ -4,6 +4,19 @@ import employeeService from '@services/employee.service';
 class BusinessController {
   public employeeService = new employeeService();
 
+  public editRole = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const uid = req.body.uid;
+      const business_key = req.business_key;
+      const newRole = req.body.new_role;
+      await this.employeeService.editRole(uid, business_key, newRole);
+
+      res.status(200).json({ message: 'edited' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public findAllMembers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const uid = req.uid;

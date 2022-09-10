@@ -58,6 +58,10 @@ class EmployeeService extends Repository<EmployeeEntity> {
   public async deleteEmployee(uid: string, businessKey: string): Promise<void> {
     await EmployeeEntity.delete({ uid, business_key: businessKey });
   }
+
+  public async editRole(uid: string, businessKey: string, newRole: string): Promise<void> {
+    await EmployeeEntity.update({ uid, business_key: businessKey }, { role: newRole });
+  }
 }
 
 export default EmployeeService;
