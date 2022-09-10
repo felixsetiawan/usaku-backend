@@ -6,7 +6,6 @@ import { verifyToken } from '@utils/util';
 const newUserMiddleware = async (req: RequestWithUser, res: Response, next: NextFunction) => {
   try {
     const Authorization = req.cookies['Authorization'] || (req.header('Authorization') || req.header('007') ? req.header('007') : null);
-    console.log('aasidljaild', Authorization);
     if (Authorization) {
       try {
         const uid = await verifyToken(Authorization);
