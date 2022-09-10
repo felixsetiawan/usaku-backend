@@ -45,7 +45,6 @@ class EmployeeService extends Repository<EmployeeEntity> {
   }
 
   public async findRole(uid: string, businessKey: string): Promise<Employee> {
-    console.log(uid, businessKey);
     const employee: Employee = await EmployeeEntity.createQueryBuilder('employee')
       .select(['employee.role'])
       .where('employee.uid = :uid and employee.business_key= :businessKey', { uid, businessKey })
@@ -54,6 +53,10 @@ class EmployeeService extends Repository<EmployeeEntity> {
       throw new HttpException(400, 'Employee does not exist');
     }
     return employee;
+  }
+
+  public async deleteEmployee(uid: string, businessKey: string): Promise<void> {
+    await EmployeeEntity.delete({ uid, business_key: businessKey });
   }
 }
 

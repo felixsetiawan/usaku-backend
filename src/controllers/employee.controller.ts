@@ -52,6 +52,18 @@ class BusinessController {
       next(error);
     }
   };
+
+  public deleteEmployee = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const uid = req.uid;
+      const businessKey = req.business_key;
+      await this.employeeService.deleteEmployee(uid, businessKey);
+
+      res.status(200).json({ message: 'deleted' });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default BusinessController;
