@@ -19,6 +19,7 @@ class BusinessRoute implements Routes {
     this.router.post(this.path, newUserMiddleware, this.employeeController.newEmployee);
     this.router.get(this.path, authMiddleware, this.employeeController.findRole);
     this.router.delete(this.path, authMiddleware, this.employeeController.deleteEmployee);
+    this.router.put(this.path, authMiddleware, this.employeeController.editRole);
   }
 }
 
