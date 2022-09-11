@@ -26,27 +26,17 @@ class TransactionService extends Repository<TransactionEntity> {
 
   public async deleteTransaction(business_key: string, id: number): Promise<Number> {
     const transactions: Transaction[] = await TransactionEntity.delete({
-      business_key: business_key,
-      id: id,
+      business_key,
+      id,
     });
 
-    if (!Transactions) throw new HttpException(409, 'No transaction found with that id.');
+    if (!transactions) throw new HttpException(409, 'No transaction found with that id.');
     return transactions;
   }
 
   public async findAllTransaction(business_key: string): Promise<Transaction[]> {
     const transactions: Transaction[] = await TransactionEntity.find();
     return transactions;
-  }
-
-  public async findCurrentTransaction(day: number, business_key: string): Promise<Transaction[]> {
-    const findTransactions: Transaction[] = await TransactionEntity.createQueryBuilder('transaction')
-      .where(`transaction.business_key = '${business_key}' AND DATE_PART('day',transaction.datetime) = ${day}`)
-      .getMany();
-
-    if (!findTransactions) throw new HttpException(409, 'No transaction today.');
-
-    return findTransactions;
   }
 
   public async findAllTransactionByUid(business_key: string): Promise<Transaction[]> {
@@ -60,46 +50,52 @@ class TransactionService extends Repository<TransactionEntity> {
     return findTransactions;
   }
 
-  public async findAllTransactionByCompletion(business_key: string): Promise<Transaction[]> {
-    const findTransactions: Transaction[] = await TransactionEntity.find({
-      where: {
-        business_key: business_key,
-        completion: 'Belum Lunas',
-      },
-    });
-    if (!findTransactions) throw new HttpException(409, 'No transaction found with that uid.');
-
-    return findTransactions;
-  }
-
-  public async findAllTransactionByCategory(business_key: string, category: TransactionCategory): Promise<Transaction[]> {
-    const findTransactions: Transaction[] = await TransactionEntity.createQueryBuilder('transaction').where(
-      `transaction_entity.business_key = '${business_key}' AND transaction_entity.category = '${category}'`,
-    );
-    console.log(findTransactions);
-
-    if (!findTransactions) throw new HttpException(409, 'No transaction found within that range.');
-
-    return findTransactions;
-  }
-
-  public async findTransactionsInRange(start: Date, end: Date, business_key: string): Promise<Transaction[]> {
-    const findTransactions: Transaction[] = await TransactionEntity.find({
-      where: {
-        business_key: business_key,
-        datetime: Between(start, end),
-      },
-    });
-    if (!findTransactions) throw new HttpException(409, 'No transaction found within that range.');
-
-    return findTransactions;
-  }
-
-  public async findMonthlyTransaction(month: number, uid: string): Promise<Transaction[]> {
+  public async findMonthlyTransaction(month: number, year: number, business_key: string): Promise<Transaction[]> {
     const findTransactions: Transaction[] = await TransactionEntity.createQueryBuilder('transaction')
-      .where(`transaction.uid = '${uid}' AND DATE_PART('month',transaction.datetime) = ${month}`)
+      .where(
+        `transaction.business_key = '${business_key}' AND DATE_PART('month',transaction.datetime) = ${month} 
+      AND DATE_PART('year',transaction.datetime) = ${year}`,
+      )
+      .orderBy('transaction.datetime', 'DESC')
       .getMany();
     if (!findTransactions) throw new HttpException(409, 'No transaction in that month.');
+
+    return findTransactions;
+  }
+
+  public async findAllTransactionByCompletion(business_key: string, category: string): Promise<Transaction[]> {
+    console.log(category);
+    const findTransactions: Transaction[] = await TransactionEntity.createQueryBuilder('transaction')
+      .where(
+        `transaction.business_key = '${business_key}'` +
+          `AND transaction.completion = 'Belum Lunas'` +
+          (category ? `AND transaction.category = '${category}'` : ''),
+      )
+      .orderBy('transaction.datetime', 'DESC')
+      .getMany();
+
+    if (findTransactions) if (!findTransactions) throw new HttpException(409, 'No transaction found that doesnt completed.');
+
+    return findTransactions;
+  }
+
+  public async findAllTransactionByCategory(
+    business_key: string,
+    month: number,
+    year: number,
+    category: TransactionCategory,
+  ): Promise<Transaction[]> {
+    console.log(category);
+    const findTransactions: Transaction[] = await TransactionEntity.createQueryBuilder('transaction')
+      .where(
+        `transaction.business_key = '${business_key}' AND transaction.category = '${category}' 
+      AND DATE_PART('month',transaction.datetime) = '${month}' AND DATE_PART('year',transaction.datetime) = '${year}'`,
+      )
+      .orderBy('transaction.datetime', 'DESC')
+      .getMany();
+    console.log(findTransactions);
+
+    if (!findTransactions) throw new HttpException(409, 'No transaction found in that category.');
 
     return findTransactions;
   }

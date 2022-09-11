@@ -33,7 +33,7 @@ class TransactionController {
   public deleteTransaction = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const business_key = req.business_key;
-      const id = req.id;
+      const id = req.query.id;
       const deleteTransaction: Transaction = await this.transactionService.deleteTransaction(business_key, id);
 
       res.status(200).json({ data: deleteTransaction, message: 'transaction deleted' });
@@ -65,24 +65,26 @@ class TransactionController {
     }
   };
 
-  public getIncompleteTransactions = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public getMonthlyTransaction = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const business_key = req.business_key;
-      const findAllTransactions: Transaction[] = await this.transactionService.findAllTransactionByCompletion(business_key);
+      const month = Number(req.query.month);
+      const year = Number(req.query.year);
+      const findTransactions: Transaction[] = await this.transactionService.findMonthlyTransaction(month, year, business_key);
 
-      res.status(200).json({ data: findAllTransactions, message: 'findAll by Incomplete Transactions' });
+      res.status(200).json({ data: findTransactions, message: 'findAll monthly', month, year });
     } catch (error) {
       next(error);
     }
   };
 
-  public getCurrentTransaction = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public getIncompleteTransactions = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const business_key = req.business_key;
-      const day = Number(req.query.day);
-      const findAllTransactions: Transaction[] = await this.transactionService.findCurrentTransaction(day, business_key);
+      const category = req.query.category || null;
+      const findAllTransactions: Transaction[] = await this.transactionService.findAllTransactionByCompletion(business_key, category);
 
-      res.status(200).json({ data: findAllTransactions, message: 'findAll by Uid and current month', day });
+      res.status(200).json({ data: findAllTransactions, message: 'findAll by Incomplete Transactions' });
     } catch (error) {
       next(error);
     }
@@ -91,22 +93,12 @@ class TransactionController {
   public getTransactionsByCategory = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const business_key = req.business_key;
-      const category = req.query.category;
-      const findAllTransactions: Transaction[] = await this.transactionService.findAllTransactionByCategory(business_key, category);
-
-      res.status(200).json({ data: findAllTransactions, message: 'findAll by Category', category });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  public getMonthlyTransaction = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    try {
-      const business_key = req.business_key;
       const month = Number(req.query.month);
-      const findTransactions: Transaction[] = await this.transactionService.findMonthlyTransaction(month, business_key);
+      const year = Number(req.query.year);
+      const category = req.query.category;
+      const findAllTransactions: Transaction[] = await this.transactionService.findAllTransactionByCategory(business_key, month, year, category);
 
-      res.status(200).json({ data: findTransactions, message: 'findAll monthly', month });
+      res.status(200).json({ data: findAllTransactions, message: 'findAll by Category', category, month, year });
     } catch (error) {
       next(error);
     }
