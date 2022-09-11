@@ -33,8 +33,8 @@ class TransactionController {
   public deleteTransaction = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const business_key = req.business_key;
-      const transactionData: createTransactionDto = req.body;
-      const deleteTransaction: Transaction = await this.transactionService.deleteTransaction(business_key, transactionData);
+      const id = req.query.id;
+      const deleteTransaction: Transaction = await this.transactionService.deleteTransaction(business_key, id);
 
       res.status(200).json({ data: deleteTransaction, message: 'transaction deleted' });
     } catch (error) {

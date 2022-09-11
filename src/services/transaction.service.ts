@@ -24,10 +24,10 @@ class TransactionService extends Repository<TransactionEntity> {
     return null;
   }
 
-  public async deleteTransaction(business_key: string, transactionData: createTransactionDto): Promise<Number> {
+  public async deleteTransaction(business_key: string, id: number): Promise<Number> {
     const transactions: Transaction[] = await TransactionEntity.delete({
       business_key,
-      id: transactionData.id,
+      id,
     });
 
     if (!transactions) throw new HttpException(409, 'No transaction found with that id.');
