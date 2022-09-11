@@ -81,10 +81,8 @@ class TransactionController {
   public getIncompleteTransactions = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const business_key = req.business_key;
-      const month = Number(req.query.month);
-      const year = Number(req.query.year);
       const category = req.query.category || null;
-      const findAllTransactions: Transaction[] = await this.transactionService.findAllTransactionByCompletion(business_key, month, year, category);
+      const findAllTransactions: Transaction[] = await this.transactionService.findAllTransactionByCompletion(business_key, category);
 
       res.status(200).json({ data: findAllTransactions, message: 'findAll by Incomplete Transactions' });
     } catch (error) {

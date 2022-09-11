@@ -63,12 +63,12 @@ class TransactionService extends Repository<TransactionEntity> {
     return findTransactions;
   }
 
-  public async findAllTransactionByCompletion(business_key: string, month: number, year: number, category: string): Promise<Transaction[]> {
+  public async findAllTransactionByCompletion(business_key: string, category: string): Promise<Transaction[]> {
     console.log(category);
     const findTransactions: Transaction[] = await TransactionEntity.createQueryBuilder('transaction')
       .where(
-        `transaction.business_key = '${business_key}' AND DATE_PART('month',transaction.datetime) = ${month} 
-    AND DATE_PART('year',transaction.datetime) = ${year} AND transaction.completion = 'Belum Lunas'` +
+        `transaction.business_key = '${business_key}'` +
+          `AND transaction.completion = 'Belum Lunas'` +
           (category ? `AND transaction.category = '${category}'` : ''),
       )
       .orderBy('transaction.datetime', 'DESC')
